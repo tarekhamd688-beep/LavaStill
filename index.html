@@ -3,78 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LavaStill | منصة التحليل النفسي والذكاء الوجداني</title>
+    <title>LavaStill | وحدة التحليل السلوكي</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --gold: #d4af37; --dark: #0a0a0a; --gray: #1a1a1a; }
-        body { background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+        body { background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; }
         .login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
-        .card { background: var(--gray); border: 1px solid var(--gold); padding: 30px; border-radius: 15px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); width: 90%; max-width: 400px; text-align: center; }
-        h1 { color: var(--gold); margin-bottom: 10px; }
-        input, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; }
-        button { background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border: none; }
         #dashboard { display: none; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
-        .stat-card { background: var(--gray); p: 20px; border-radius: 12px; border-right: 4px solid var(--gold); padding: 20px; }
-        canvas { max-height: 200px; }
+        .card { background: var(--gray); border: 1px solid var(--gold); padding: 30px; border-radius: 15px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); text-align: center; }
+        .stat-card { background: var(--gray); padding: 20px; border-radius: 12px; border-right: 4px solid var(--gold); margin-bottom: 20px; }
+        input, button, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; }
+        button { background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        #analysisResult { color: var(--gold); font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div id="loginPage" class="login-screen">
-        <div class="card">
+        <div class="card" style="max-width: 400px; width: 90%;">
             <h1>LavaStill 🌋</h1>
-            <p>منصة التحليل النفسي المتطورة</p>
-            <input type="text" id="user" placeholder="معرف الباحث / المستخدم">
-            <input type="password" placeholder="كلمة المرور">
+            <p>وحدة القياس النفسي والحيوي</p>
+            <input type="text" placeholder="معرف الباحث">
             <button onclick="showDashboard()">دخول المنصة</button>
         </div>
     </div>
 
     <div id="dashboard">
-        <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold); padding-bottom: 10px;">
-            <h2>لوحة البيانات الحيوية والنفسية</h2>
-            <button onclick="location.reload()" style="width: auto; padding: 5px 15px;">تسجيل خروج</button>
+        <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold); margin-bottom: 20px;">
+            <h2>لوحة البيانات التحليلية</h2>
+            <button onclick="location.reload()" style="width: auto;">خروج</button>
         </header>
 
         <div class="grid">
             <div class="stat-card">
-                <h3>مؤشر الحالة المزاجية (القياس الحالي)</h3>
-                <p>بناءً على الدراسات السلوكية المحدثة</p>
-                <canvas id="moodChart"></canvas>
+                <h3>فحص الحالة اليومي (Bio-Check)</h3>
+                <label>كيف كان معدل نومك؟</label>
+                <select id="sleepScore">
+                    <option value="20">سيء جداً</option>
+                    <option value="50">متقطع</option>
+                    <option value="90">ممتاز</option>
+                </select>
+                <label>مستوى التركيز الذهني:</label>
+                <input type="range" id="focusRange" min="0" max="100">
+                <button onclick="updateAnalysis()">تحليل البيانات الآن</button>
+                <p id="analysisResult"></p>
             </div>
+
             <div class="stat-card">
-                <h3>تحليل مستوى التوتر (Bio-Data)</h3>
-                <p>مستوى الإجهاد العصبي: <span style="color: var(--gold)">منخفض</span></p>
-                <div style="background: #333; height: 10px; border-radius: 5px; margin-top: 20px;">
-                    <div style="background: var(--gold); width: 35%; height: 100%; border-radius: 5px;"></div>
-                </div>
+                <h3>مؤشر الاستقرار النفسي</h3>
+                <canvas id="moodChart"></canvas>
             </div>
         </div>
     </div>
 
     <script>
+        let myChart;
         function showDashboard() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            renderChart();
+            renderChart([60, 70, 65, 80, 75]);
         }
 
-        function renderChart() {
+        function renderChart(dataPoints) {
             const ctx = document.getElementById('moodChart').getContext('2d');
-            new Chart(ctx, {
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء'],
+                    labels: ['1', '2', '3', '4', 'الآن'],
                     datasets: [{
-                        label: 'استقرار الحالة النفسية',
-                        data: [70, 85, 75, 90, 80],
+                        label: 'مستوى التوازن',
+                        data: dataPoints,
                         borderColor: '#d4af37',
-                        tension: 0.4
+                        tension: 0.3,
+                        fill: true,
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)'
                     }]
                 },
                 options: { plugins: { legend: { display: false } } }
             });
+        }
+
+        function updateAnalysis() {
+            const sleep = parseInt(document.getElementById('sleepScore').value);
+            const focus = parseInt(document.getElementById('focusRange').value);
+            const total = (sleep + focus) / 2;
+            
+            // تحديث الرسم البياني بالقيم الجديدة
+            renderChart([60, 70, 65, 80, total]);
+            
+            let msg = total > 70 ? "الحالة مستقرة: استمر في نشاطك." : "تحذير: مؤشرات الإجهاد مرتفعة، ينصح بالراحة.";
+            document.getElementById('analysisResult').innerText = "النتيجة: " + msg;
         }
     </script>
 </body>
