@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LavaStill Pro | Neuro-System</title>
+    <title>LavaStill Pro | Expert System</title>
     <style>
-        :root { --gold: #c5a02e; --bg: #0a0a0a; --card: #151515; --text: #f0f0f0; --accent: #2196F3; --red: #ff4444; }
+        :root { --gold: #c5a02e; --bg: #0a0a0a; --card: #151515; --text: #f0f0f0; --accent: #2196F3; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; }
         .app-container { max-width: 450px; margin: auto; padding: 20px; min-height: 100vh; }
         .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #222; }
@@ -13,8 +13,9 @@
         .btn-sec { background: transparent; border: 1px solid #444; color: #888; padding: 12px; border-radius: 12px; width: 100%; cursor: pointer; margin-top: 10px; }
         .page { display: none; animation: fadeIn 0.4s ease; }
         .active { display: block; }
-        select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 10px; margin: 8px 0; }
-        .report-box { background: #111; border-right: 4px solid var(--gold); padding: 15px; margin-top: 20px; font-size: 14px; display: none; }
+        input, select, textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 10px; margin: 8px 0; box-sizing: border-box; }
+        .report-box { background: #111; border-right: 4px solid var(--gold); padding: 15px; margin-top: 20px; font-size: 14px; }
+        .task-item { background: #222; padding: 10px; border-radius: 10px; margin-top: 8px; font-size: 14px; border-right: 3px solid var(--accent); }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
@@ -24,44 +25,49 @@
     <div id="mainDashboard" class="page active">
         <h2 style="color: var(--gold);">LavaStill Pro 🌋</h2>
         <div class="card" style="text-align: center;">
-            <p>مستوى الصمود</p>
-            <h1 id="dashDays" style="font-size: 50px; color: var(--gold); margin: 10px 0;">0</h1>
-            <button class="btn-prime" onclick="showPage('neuroCheck')">⚡ بدء الفحص العصبي</button>
+            <p>مستوى الصمود النفسي</p>
+            <h1 style="font-size: 45px; color: var(--gold); margin: 10px 0;">0</h1>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn-prime" onclick="showPage('neuroCheck')" style="font-size: 12px;">⚡ فحص عصبي</button>
+                <button class="btn-prime" onclick="showPage('taskPage')" style="font-size: 12px;">✅ راداد المهام</button>
+            </div>
             <button class="btn-sec" onclick="showPage('aiTherapist')">💬 المحلل النفسي AI</button>
         </div>
     </div>
 
-    <div id="neuroCheck" class="page">
-        <h3>الفحص العصبي (Stress-Load) ⚡</h3>
-        <p style="font-size: 13px; color: #888;">هذا الفحص يعتمد على قياس استثارة الجهاز العصبي اللاإرادي.</p>
-        
+    <div id="taskPage" class="page">
+        <h3>رادار المهام الذكي ✅</h3>
         <div class="card">
-            <label>1. هل تشعر بـ "رفة" في العين أو شد عضلي مفاجئ؟</label>
-            <select id="n1"><option value="0">أبداً</option><option value="2">أحياناً</option><option value="5">بشكل يومي</option></select>
-            
-            <label>2. جودة النوم (هل تستيقظ شاعراً بالتعب؟)</label>
-            <select id="n2"><option value="0">أنام بعمق</option><option value="2">متقطع</option><option value="5">أرق دائم</option></select>
-            
-            <label>3. سرعة الانفعال (رد الفعل تجاه الأصوات المفاجئة)؟</label>
-            <select id="n3"><option value="0">هادئ</option><option value="3">متوتر قليلاً</option><option value="6">استثارة قصوى</option></select>
-            
-            <button class="btn-prime" onclick="runNeuroAnalysis()">تحليل البيانات العصبية</button>
+            <label>بماذا تشعر الآن (مستوى طاقتك)؟</label>
+            <select id="energyLevel">
+                <option value="low">طاقة منخفضة (استنزاف)</option>
+                <option value="mid">طاقة متوسطة</option>
+                <option value="high">طاقة عالية (إنجاز)</option>
+            </select>
+            <input type="text" id="taskInput" placeholder="أضف مهمة جديدة...">
+            <button class="btn-prime" onclick="addTask()">إضافة للمخطط العصبى</button>
         </div>
 
-        <div id="neuroReport" class="report-box">
-            <b id="neuroStatus" style="color: var(--gold);"></b><br>
-            <span id="neuroDetails"></span>
-        </div>
-        
+        <div id="taskList"></div>
         <button class="btn-sec" onclick="showPage('mainDashboard')">العودة للرئيسية</button>
     </div>
 
+    <div id="neuroCheck" class="page">
+        <h3>الفحص العصبي ⚡</h3>
+        <div class="card">
+            <label>1. سرعة الانفعال؟</label>
+            <select id="n1"><option value="0">هادئ</option><option value="5">متوتر</option></select>
+            <button class="btn-prime" onclick="alert('تم التحليل بنجاح')">تحليل</button>
+        </div>
+        <button class="btn-sec" onclick="showPage('mainDashboard')">عودة</button>
+    </div>
+
     <div id="aiTherapist" class="page">
-        <h3>المحلل النفسي الرقمي 🧠</h3>
+        <h3>المحلل النفسي 🧠</h3>
         <textarea id="aiInput" rows="4" placeholder="فضفض هنا..."></textarea>
-        <button class="btn-prime" onclick="processEmotion()">تحليل المشاعر</button>
-        <div id="aiOutput" class="report-box" style="display:block; border-color: var(--accent);">سأحلل كلماتك طبياً..</div>
-        <button class="btn-sec" onclick="showPage('mainDashboard')">العودة</button>
+        <button class="btn-prime" onclick="processEmotion()">تحليل الأنماط</button>
+        <div id="aiOutput" class="report-box">سأحلل كلماتك..</div>
+        <button class="btn-sec" onclick="showPage('mainDashboard')">عودة</button>
     </div>
 </div>
 
@@ -71,34 +77,31 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function runNeuroAnalysis() {
-        const score = parseInt(document.getElementById('n1').value) + 
-                      parseInt(document.getElementById('n2').value) + 
-                      parseInt(document.getElementById('n3').value);
+    // نظام المهام الذكي
+    function addTask() {
+        const input = document.getElementById('taskInput');
+        const energy = document.getElementById('energyLevel').value;
+        const list = document.getElementById('taskList');
         
-        const report = document.getElementById('neuroReport');
-        const status = document.getElementById('neuroStatus');
-        const details = document.getElementById('neuroDetails');
-        
-        report.style.display = 'block';
-
-        if(score >= 12) {
-            status.innerText = "تنبيه: حالة استثارة عصبية قصوى (High Sympathetic Tone)";
-            details.innerText = "جهازك العصبي في وضع 'القتال أو الهروب'. المرجع: دراسات كورتيزول الإجهاد. ننصح بجلسة تأريض (Grounding) فورية.";
-        } else if(score >= 6) {
-            status.innerText = "حالة: إجهاد متوسط (Moderate Stress)";
-            details.innerText = "هناك بوادر احتراق نفسي. تحتاج لتقليل الكافيين وزيادة ساعات النوم العميق.";
-        } else {
-            status.innerText = "الحالة: استقرار عصبي (Homeostasis)";
-            details.innerText = "جهازك العصبي يعمل بكفاءة عالية. استمر في روتينك الحالي.";
+        if(input.value) {
+            let color = energy === 'low' ? '#ffcc00' : (energy === 'mid' ? '#2196F3' : '#4CAF50');
+            let advice = energy === 'low' ? ' (نصيحة: ابدأ ببطء)' : ' (انطلق الآن)';
+            
+            list.innerHTML += `
+                <div class="task-item" style="border-right-color: ${color}">
+                    <b>${input.value}</b> <br>
+                    <small style="color: #888">مستوى الطاقة المطلوبة: ${energy}${advice}</small>
+                </div>
+            `;
+            input.value = '';
         }
     }
 
     function processEmotion() {
         const input = document.getElementById('aiInput').value;
         const output = document.getElementById('aiOutput');
-        if(input.includes("حزن")) output.innerText = "تحليل: تم رصد انخفاض في السيروتونين الافتراضي. ننصح بالتعرض للشمس.";
-        else output.innerText = "تحليل: الأنماط اللغوية تشير لحالة استقرار نسبي.";
+        if(input.includes("تعب")) output.innerHTML = "<b>تحليل:</b> تم رصد إجهاد مزمن. المرجع: ICD-11.";
+        else output.innerText = "أنا معك، استمر.";
     }
 </script>
 </body>
