@@ -2,10 +2,26 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>LavaStill - قريباً</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LavaStill | لافا ستيل</title>
+    <style>
+        body { background: #000; color: #d4af37; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .container { border: 2px solid #d4af37; padding: 40px; border-radius: 20px; background: rgba(20, 20, 20, 0.8); box-shadow: 0 0 20px #d4af37; width: 80%; max-width: 400px; }
+        h1 { font-size: 2.5rem; margin-bottom: 20px; text-shadow: 2px 2px 5px #000; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #d4af37; background: #111; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #d4af37; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 1.1rem; }
+        button:hover { background: #fff; box-shadow: 0 0 15px #fff; }
+        .footer { margin-top: 20px; font-size: 0.8rem; color: #888; }
+    </style>
 </head>
-<body style="background: #121212; color: #ffcc00; text-align: center; padding-top: 50px; font-family: Arial;">
-    <h1>مرحباً بك في لافا ستيل (LavaStill) 🌋</h1>
-    <p>البداية الجديدة من خارج "سجن" ريبريت!</p>
+<body>
+    <div class="container">
+        <h1>LavaStill 🌋</h1>
+        <p>مرحباً بك يا طارق في ورشتك الجديدة</p>
+        <input type="text" placeholder="اسم المستخدم">
+        <input type="password" placeholder="كلمة المرور">
+        <button onclick="alert('جارٍ تجهيز لوحة التحكم...')">دخول الورشة</button>
+        <div class="footer">تصميم وإدارة: LavaStill Team</div>
+    </div>
 </body>
 </html>
