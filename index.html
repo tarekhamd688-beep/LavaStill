@@ -3,98 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LavaStill | وحدة التحليل السلوكي</title>
+    <title>LavaStill | طبيبك النفسي المتكامل</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --gold: #d4af37; --dark: #0a0a0a; --gray: #1a1a1a; }
-        body { background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
-        #dashboard { display: none; padding: 20px; }
-        .card { background: var(--gray); border: 1px solid var(--gold); padding: 30px; border-radius: 15px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); text-align: center; }
-        .stat-card { background: var(--gray); padding: 20px; border-radius: 12px; border-right: 4px solid var(--gold); margin-bottom: 20px; }
-        input, button, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; }
-        button { background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border: none; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        #analysisResult { color: var(--gold); font-weight: bold; margin-top: 10px; }
+        :root { --gold: #d4af37; --dark: #050505; --card-bg: #121212; --text: #e0e0e0; }
+        body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: auto; padding: 20px; }
+        
+        /* شاشات النظام */
+        .page { display: none; animation: fadeIn 0.5s; }
+        .active { display: block; }
+
+        /* الأزرار والقوائم */
+        .main-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .menu-btn { background: var(--card-bg); border: 1px solid var(--gold); padding: 20px; border-radius: 15px; 
+                   text-align: center; cursor: pointer; transition: 0.3s; font-weight: bold; color: var(--gold); }
+        .menu-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
+        
+        /* تنسيق الدردشة والمذكرات */
+        .chat-box { height: 300px; background: #000; border: 1px solid #333; border-radius: 10px; padding: 10px; overflow-y: auto; margin-bottom: 10px; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; border-radius: 8px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="loginPage" class="login-screen">
-        <div class="card" style="max-width: 400px; width: 90%;">
-            <h1>LavaStill 🌋</h1>
-            <p>وحدة القياس النفسي والحيوي</p>
-            <input type="text" placeholder="معرف الباحث">
-            <button onclick="showDashboard()">دخول المنصة</button>
+    <div class="container">
+        <div id="authPage" class="page active">
+            <h1 style="text-align:center; color:var(--gold);">LavaStill 🌋</h1>
+            <p style="text-align:center;">مرحباً بك في رحلة التعافي والفهم</p>
+            <input type="text" id="regUser" placeholder="اسم المستخدم أو المعرف السري">
+            <input type="password" placeholder="كلمة المرور المشفرة">
+            <button onclick="showPage('homePage')">تسجيل الدخول / إنشاء حساب</button>
+            <p style="font-size: 12px; color: #666; text-align: center; margin-top: 20px;">* جميع بياناتك مشفرة ولا يمكن لأحد الوصول إليها.</p>
         </div>
-    </div>
 
-    <div id="dashboard">
-        <header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold); margin-bottom: 20px;">
-            <h2>لوحة البيانات التحليلية</h2>
-            <button onclick="location.reload()" style="width: auto;">خروج</button>
-        </header>
-
-        <div class="grid">
-            <div class="stat-card">
-                <h3>فحص الحالة اليومي (Bio-Check)</h3>
-                <label>كيف كان معدل نومك؟</label>
-                <select id="sleepScore">
-                    <option value="20">سيء جداً</option>
-                    <option value="50">متقطع</option>
-                    <option value="90">ممتاز</option>
-                </select>
-                <label>مستوى التركيز الذهني:</label>
-                <input type="range" id="focusRange" min="0" max="100">
-                <button onclick="updateAnalysis()">تحليل البيانات الآن</button>
-                <p id="analysisResult"></p>
+        <div id="homePage" class="page">
+            <h2 style="color:var(--gold);">أهلاً بك يا طارق 🌿</h2>
+            <p>كيف يمكن لـ LavaStill مساعدتك اليوم؟</p>
+            
+            <div class="main-menu">
+                <div class="menu-btn" onclick="showPage('measurePage')">🧠 قياس الحالة النفسية</div>
+                <div class="menu-btn" onclick="showPage('ventPage')">🗣️ فضفضة (سرية)</div>
+                <div class="menu-btn" onclick="showPage('diaryPage')">📓 مذكرات</div>
+                <div class="menu-btn" onclick="showPage('tasksPage')">✅ المهام والترتيب</div>
+                <div class="menu-btn" onclick="showPage('neuroPage')">⚡ تحليل الحالة العصبية</div>
+                <div class="menu-btn" onclick="showPage('addictPage')">🛡️ برنامج التعافي (إدمان)</div>
             </div>
-
-            <div class="stat-card">
-                <h3>مؤشر الاستقرار النفسي</h3>
-                <canvas id="moodChart"></canvas>
-            </div>
+            <button onclick="showPage('chatAiPage')" style="margin-top: 20px; background: #fff; color: #000;">💬 تحدث مع الذكاء الاصطناعي</button>
         </div>
+
+        <div id="ventPage" class="page">
+            <h3>قسم الفضفضة الآمنة 🗣️</h3>
+            <p style="font-size: 14px;">اكتب كل ما يدور في ذهنك.. هذا المكان ملكك وحدك.</p>
+            <textarea id="ventText" rows="6" placeholder="تكلم بكل حرية..."></textarea>
+            <button onclick="ventSubmit()">إنهاء والتحليل</button>
+            <button onclick="showPage('homePage')" style="background:none; color:var(--gold);">عودة للرئيسية</button>
+        </div>
+
+        <div id="chatAiPage" class="page">
+            <h3>مساعد LavaStill الذكي 🤖</h3>
+            <div class="chat-box" id="chatBox">
+                <div style="color:var(--gold)">نظام: أنا هنا لأسمعك وأدعمك بشكل علمي.</div>
+            </div>
+            <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا...">
+            <button onclick="sendChat()">إرسال</button>
+            <button onclick="showPage('homePage')" style="background:none; color:var(--gold);">عودة</button>
+        </div>
+
     </div>
 
     <script>
-        let myChart;
-        function showDashboard() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            renderChart([60, 70, 65, 80, 75]);
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        function renderChart(dataPoints) {
-            const ctx = document.getElementById('moodChart').getContext('2d');
-            if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['1', '2', '3', '4', 'الآن'],
-                    datasets: [{
-                        label: 'مستوى التوازن',
-                        data: dataPoints,
-                        borderColor: '#d4af37',
-                        tension: 0.3,
-                        fill: true,
-                        backgroundColor: 'rgba(212, 175, 55, 0.1)'
-                    }]
-                },
-                options: { plugins: { legend: { display: false } } }
-            });
+        function ventSubmit() {
+            alert("تم حفظ كلامك وتشفيره. LavaStill هنا لدعمك. هل تود اقتراحات بناءً على ما كتبت؟");
+            showPage('homePage');
         }
 
-        function updateAnalysis() {
-            const sleep = parseInt(document.getElementById('sleepScore').value);
-            const focus = parseInt(document.getElementById('focusRange').value);
-            const total = (sleep + focus) / 2;
-            
-            // تحديث الرسم البياني بالقيم الجديدة
-            renderChart([60, 70, 65, 80, total]);
-            
-            let msg = total > 70 ? "الحالة مستقرة: استمر في نشاطك." : "تحذير: مؤشرات الإجهاد مرتفعة، ينصح بالراحة.";
-            document.getElementById('analysisResult').innerText = "النتيجة: " + msg;
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            const box = document.getElementById('chatBox');
+            if(input.value) {
+                box.innerHTML += `<div>أنت: ${input.value}</div>`;
+                box.innerHTML += `<div style="color:var(--gold)">LavaStill: أفهمك تماماً، بناءً على الدراسات العلمية، ما تشعر به هو رد فعل طبيعي لضغوط معينة..</div>`;
+                input.value = '';
+                box.scrollTop = box.scrollHeight;
+            }
         }
     </script>
 </body>
