@@ -3,63 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LavaStill | الإصدار العلمي الأكاديمي</title>
+    <title>LavaStill | نظام التعافي المتطور</title>
     <style>
-        :root { --gold: #d4af37; --dark: #050505; --card: #121212; --input: #1a1a1a; }
-        body { background: var(--dark); color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        .container { max-width: 500px; margin: auto; padding: 15px; min-height: 100vh; }
-        .page { display: none; animation: slideIn 0.3s ease-out; }
+        :root { --gold: #d4af37; --dark: #050505; --card: #121212; }
+        body { background: var(--dark); color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .container { max-width: 500px; margin: auto; padding: 20px; }
+        .page { display: none; animation: fadeIn 0.3s; }
         .active { display: block; }
-        @keyframes slideIn { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
-        .btn { background: var(--card); border: 1px solid var(--gold); padding: 18px; border-radius: 12px; color: var(--gold); cursor: pointer; text-align: center; font-weight: bold; margin-top: 10px; display: block; width: 100%; box-sizing: border-box; text-decoration: none; }
-        .btn:active { background: var(--gold); color: #000; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: var(--input); color: #fff; box-sizing: border-box; }
-        .report { background: #1a1a1a; padding: 15px; border-radius: 10px; border-right: 5px solid var(--gold); margin-top: 15px; font-size: 14px; line-height: 1.6; }
+        .btn { background: var(--card); border: 1px solid var(--gold); padding: 15px; border-radius: 10px; color: var(--gold); cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+        .btn-emergency { background: #721c24; color: #f8d7da; border: 1px solid #f5c6cb; } /* زر الطوارئ */
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; background: #1a1a1a; color: #fff; border: 1px solid #333; }
+        .report-card { background: #1a1a1a; padding: 15px; border-radius: 10px; border-right: 5px solid var(--gold); margin-top: 15px; line-height: 1.6; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="loginPage" class="page active">
-        <h1>LavaStill 🌋</h1>
-        <p style="text-align:center">منصة التحليل النفسي المبنية على دراسات عالمية</p>
-        <input type="text" id="userName" placeholder="ادخل اسمك">
-        <button class="btn" onclick="initApp()">دخول المنصة</button>
-    </div>
-
-    <div id="homePage" class="page">
-        <h2 id="userHello"></h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div class="btn" onclick="showPage('measurePage')">🧠 قياس النفسية</div>
-            <div class="btn" onclick="showPage('neuroPage')">⚡ الحالة العصبية</div>
-            <div class="btn" onclick="showPage('addictPage')">🛡️ خطة التعافي</div>
-            <div class="btn" onclick="showPage('ventPage')">🗣️ فضفضة AI</div>
-            <div class="btn" onclick="showPage('taskPage')">✅ المهام</div>
-            <div class="btn" onclick="showPage('diaryPage')">📓 المذكرات</div>
-        </div>
-    </div>
-
-    <div id="neuroPage" class="page">
-        <h3>تحليل الجهاز العصبي (Bio-Stress) ⚡</h3>
-        <p style="font-size:12px">بناءً على معايير الإجهاد العصبي التراكمي:</p>
-        <label>هل تعاني من تشنجات لا إرادية أو رعشة بسيطة؟</label>
-        <select id="n1"><option value="0">لا</option><option value="2">أحياناً</option><option value="5">كثيراً</option></select>
-        <label>هل تشعر بصداع ضاغط في مؤخرة الرأس؟</label>
-        <select id="n2"><option value="0">لا</option><option value="2">أحياناً</option><option value="5">كثيراً</option></select>
-        <button class="btn" onclick="calcNeuro()">تحليل الحالة العصبية</button>
-        <div id="neuroRes" class="report" style="display:none"></div>
-        <button class="btn" style="background:none" onclick="showPage('homePage')">عودة</button>
+    <div id="homePage" class="page active">
+        <h1 style="color:var(--gold)">LavaStill 🌋</h1>
+        <div class="btn" onclick="showPage('addictPage')">🛡️ نظام التعافي من الإدمان (مفعّل)</div>
+        <p style="text-align:center; font-size:12px; color:#666">باقي الأزرار جاري تطويرها باحترافية...</p>
     </div>
 
     <div id="addictPage" class="page">
-        <h3>بروتوكول التعافي العلمي 🛡️</h3>
-        <label>حدد نوع السلوك المراد علاجه:</label>
-        <select id="addictCat">
-            <option value="chemical">إدمان مواد (تدخين، منبهات..)</option>
-            <option value="behavioral">إدمان سلوكي (إنترنت، ألعاب..)</option>
-        </select>
-        <button class="btn" onclick="generatePlan()">استخراج خطة التعافي</button>
-        <div id="planRes" class="report" style="display:none"></div>
+        <h2 style="color:var(--gold)">درع التعافي 🛡️</h2>
+        <div id="step1">
+            <p>1. ما هو نوع التحدي الذي تواجهه؟</p>
+            <select id="addictType">
+                <option value="digital">إدمان رقمي (سوشيال ميديا/ألعاب)</option>
+                <option value="substance">إدمان مواد (تدخين/كافيين/أخرى)</option>
+            </select>
+            <p>2. كم مرة حاولت الإقلاع سابقاً؟</p>
+            <input type="number" id="attempts" placeholder="0">
+            <button class="btn" onclick="processAddict()">تحليل وبدء الخطة</button>
+        </div>
+
+        <div id="recoveryReport" class="report-card" style="display:none">
+            <h3 id="reportTitle"></h3>
+            <div id="reportContent"></div>
+            <hr border="0" height="1" style="background:#333">
+            <button class="btn btn-emergency" onclick="emergencyHelp()">🚨 أنا أشعر بضعف الآن (طوارئ)</button>
+        </div>
+        
         <button class="btn" style="background:none" onclick="showPage('homePage')">عودة</button>
     </div>
 </div>
@@ -70,35 +56,36 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function initApp() {
-        const name = document.getElementById('userName').value;
-        if(name) {
-            localStorage.setItem('ls_name', name);
-            document.getElementById('userHello').innerText = "أهلاً بك، " + name + " ✨";
-            showPage('homePage');
+    function processAddict() {
+        const type = document.getElementById('addictType').value;
+        const attempts = document.getElementById('attempts').value;
+        const report = document.getElementById('recoveryReport');
+        const content = document.getElementById('reportContent');
+        
+        report.style.display = 'block';
+        document.getElementById('step1').style.display = 'none';
+
+        if(type === 'digital') {
+            document.getElementById('reportTitle').innerText = "خطة إعادة الهيكلة العصبية";
+            content.innerHTML = `
+                <b>التشخيص:</b> إدمان سلوكي يؤثر على مستويات الدوبامين.<br>
+                <b>الخطوة 1:</b> تطبيق "الصيام الرقمي" لمدة ٤ ساعات يومياً.<br>
+                <b>الخطوة 2:</b> استبدال التصفح بنشاط حركي (مشي/قراءة).<br>
+                <b>نصيحة:</b> عقلك يحتاج ٢١ يوماً لترميم المسارات العصبية.
+            `;
+        } else {
+            document.getElementById('reportTitle').innerText = "بروتوكول التحرر الكيميائي";
+            content.innerHTML = `
+                <b>التشخيص:</b> اعتمادية مادية على مادة خارجية.<br>
+                <b>الخطوة 1:</b> تقليل الجرعة بنسبة ٢٠٪ كل ٣ أيام.<br>
+                <b>الخطوة 2:</b> شرب كميات كبيرة من الماء لطرد السموم.<br>
+                <b>تحذير:</b> في حال ظهور أعراض انسحاب شديدة، يرجى استشارة طبيب فوراً.
+            `;
         }
     }
 
-    function calcNeuro() {
-        const score = parseInt(document.getElementById('n1').value) + parseInt(document.getElementById('n2').value);
-        const res = document.getElementById('neuroRes');
-        res.style.display = 'block';
-        if(score >= 7) {
-            res.innerHTML = "<b>التحليل:</b> تظهر المؤشرات إجهاداً عصبياً مرتفعاً (Hyperarousal). المرجع: دراسات الجهاز العصبي السمبثاوي. ننصح بتمارين تفريغ الشحنات.";
-        } else {
-            res.innerHTML = "<b>التحليل:</b> استقرار في الوظائف العصبية الحسية. ننصح بالحفاظ على دورات النوم المنتظمة.";
-        }
-    }
-
-    function generatePlan() {
-        const cat = document.getElementById('addictCat').value;
-        const res = document.getElementById('planRes');
-        res.style.display = 'block';
-        if(cat === "chemical") {
-            res.innerHTML = "<b>الخطة العلمية:</b> اعتماد بروتوكول التخلص من السموم التدريجي + تعويض الدوبامين الطبيعي عبر الرياضة. (مرجع: NIH Guide).";
-        } else {
-            res.innerHTML = "<b>الخطة العلمية:</b> تطبيق تقنية 'الصيام الرقمي' وإعادة هيكلة المكافأة الدماغية. (مرجع: دراسات السلوك المعرفي بجامعة ستانفورد).";
-        }
+    function emergencyHelp() {
+        alert("توقف! تنفس بعمق ١٠ مرات. تذكر لماذا بدأت. الرغبة الملحة تستمر فقط من ٣ لـ ٥ دقائق وستختفي. أنت أقوى!");
     }
 </script>
 
