@@ -176,3 +176,85 @@
 
 </body>
 </html>
+<script>
+    // 1. محرك البيانات المركزي
+    let appData = {
+        user: localStorage.getItem('ls_user') || '',
+        days: parseInt(localStorage.getItem('ls_days')) || 0
+    };
+
+    // 2. تشغيل التطبيق عند التحميل
+    function renderDashboard() {
+        if(!appData.user) {
+            showPage('authPage');
+        } else {
+            document.getElementById('displayUserName').innerText = "مرحباً، " + appData.user;
+            document.getElementById('soberCounter').innerText = appData.days;
+            showPage('dashboardPage');
+        }
+    }
+
+    // 3. نظام التنقل بين الصفحات
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function initApp() {
+        const name = document.getElementById('userNameInput').value;
+        if(name.trim()) {
+            appData.user = name;
+            localStorage.setItem('ls_user', name);
+            renderDashboard();
+        }
+    }
+
+    function incrementDay() {
+        appData.days++;
+        localStorage.setItem('ls_days', appData.days);
+        document.getElementById('soberCounter').innerText = appData.days;
+    }
+
+    // 4. موديول خطة التعافي (Recovery Module)
+    function openModule(mod) {
+        if(mod === 'recovery') {
+            showPage('recoveryPage');
+        } else {
+            alert("هذا القسم ( " + mod + " ) يتم تجهيزه الآن بمقاييس عالمية...");
+        }
+    }
+
+    function generatePlan() {
+        const type = document.getElementById('addictionType').value;
+        const attempts = document.getElementById('attempts').value;
+        const resultBox = document.getElementById('planResult');
+        
+        resultBox.style.display = 'block';
+        
+        if(type === 'digital') {
+            resultBox.innerHTML = `
+                <h3 style="color:var(--gold)">خطة إعادة الهيكلة العصبية 🧠</h3>
+                <p><b>التشخيص:</b> إجهاد رقمي يؤثر على مستويات الدوبامين.</p>
+                <p><b>الخطوة 1:</b> تطبيق "الصيام الرقمي" لمدة 4 ساعات يومياً.</p>
+                <p><b>الخطوة 2:</b> استبدال التصفح بنشاط حركي (مشي/قراءة).</p>
+                <p style="font-size:12px; color:#888;">نصيحة: عقلك يحتاج 21 يوماً لترميم المسارات العصبية.</p>
+            `;
+        } else {
+            resultBox.innerHTML = `
+                <h3 style="color:var(--gold)">بروتوكول التحرر الكيميائي 🛡️</h3>
+                <p><b>التشخيص:</b> اعتمادية مادية على مادة خارجية.</p>
+                <p><b>الخطوة 1:</b> تقليل الجرعة بنسبة 20% كل 3 أيام.</p>
+                <p><b>الخطوة 2:</b> شرب كميات كبيرة من الماء لطرد السموم.</p>
+                <p style="color:#ff4444; font-size:12px;">تحذير: في حال ظهور أعراض انسحاب شديدة، استشر طبيباً فوراً.</p>
+            `;
+        }
+    }
+
+    function triggerEmergency() {
+        alert("توقف! تنفس بعمق 10 مرات. تذكر لماذا بدأت. الرغبة الملحة تستمر 5 دقائق فقط وستختفي. أنت أقوى! 🌋");
+    }
+
+    window.onload = renderDashboard;
+</script>
+
