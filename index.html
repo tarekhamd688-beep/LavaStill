@@ -3,52 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LavaStill | نظام التعافي المتطور</title>
+    <title>LavaStill | إدارة التعافي</title>
     <style>
-        :root { --gold: #d4af37; --dark: #050505; --card: #121212; }
-        body { background: var(--dark); color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; }
-        .container { max-width: 500px; margin: auto; padding: 20px; }
-        .page { display: none; animation: fadeIn 0.3s; }
+        :root { --gold: #d4af37; --dark: #050505; --card: #121212; --danger: #ff4d4d; }
+        body { background: var(--dark); color: #e0e0e0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
+        .page { display: none; animation: fadeIn 0.4s; }
         .active { display: block; }
-        .btn { background: var(--card); border: 1px solid var(--gold); padding: 15px; border-radius: 10px; color: var(--gold); cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
-        .btn-emergency { background: #721c24; color: #f8d7da; border: 1px solid #f5c6cb; } /* زر الطوارئ */
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; background: #1a1a1a; color: #fff; border: 1px solid #333; }
-        .report-card { background: #1a1a1a; padding: 15px; border-radius: 10px; border-right: 5px solid var(--gold); margin-top: 15px; line-height: 1.6; }
+        .card { background: var(--card); border: 1px solid #333; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        .btn { background: var(--card); border: 1px solid var(--gold); padding: 15px; border-radius: 12px; color: var(--gold); cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+        .counter { font-size: 40px; color: var(--gold); font-weight: bold; margin: 10px 0; }
+        .progress-bar { background: #333; height: 10px; border-radius: 5px; margin-top: 10px; overflow: hidden; }
+        .progress-fill { background: var(--gold); height: 100%; width: 0%; transition: 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div class="container">
     <div id="homePage" class="page active">
         <h1 style="color:var(--gold)">LavaStill 🌋</h1>
-        <div class="btn" onclick="showPage('addictPage')">🛡️ نظام التعافي من الإدمان (مفعّل)</div>
-        <p style="text-align:center; font-size:12px; color:#666">باقي الأزرار جاري تطويرها باحترافية...</p>
+        <div class="card">
+            <h3>مرحباً طارق</h3>
+            <p>مشوار الألف ميل يبدأ بخطوة واعية.</p>
+            <button class="btn" onclick="showPage('addictDashboard')">🛡️ لوحة تحكم التعافي</button>
+            <button class="btn" onclick="showPage('ventPage')" style="border-color:#444">🗣️ فضفضة ومراقبة مشاعر</button>
+        </div>
     </div>
 
-    <div id="addictPage" class="page">
-        <h2 style="color:var(--gold)">درع التعافي 🛡️</h2>
-        <div id="step1">
-            <p>1. ما هو نوع التحدي الذي تواجهه؟</p>
-            <select id="addictType">
-                <option value="digital">إدمان رقمي (سوشيال ميديا/ألعاب)</option>
-                <option value="substance">إدمان مواد (تدخين/كافيين/أخرى)</option>
-            </select>
-            <p>2. كم مرة حاولت الإقلاع سابقاً؟</p>
-            <input type="number" id="attempts" placeholder="0">
-            <button class="btn" onclick="processAddict()">تحليل وبدء الخطة</button>
-        </div>
-
-        <div id="recoveryReport" class="report-card" style="display:none">
-            <h3 id="reportTitle"></h3>
-            <div id="reportContent"></div>
-            <hr border="0" height="1" style="background:#333">
-            <button class="btn btn-emergency" onclick="emergencyHelp()">🚨 أنا أشعر بضعف الآن (طوارئ)</button>
-        </div>
+    <div id="addictDashboard" class="page">
+        <h2 style="color:var(--gold)">عداد الحرية 🕊️</h2>
         
-        <button class="btn" style="background:none" onclick="showPage('homePage')">عودة</button>
+        <div class="card" style="text-align: center;">
+            <p id="habitName">جاري متابعة هدفك...</p>
+            <div class="counter" id="daysCount">0</div>
+            <p>يوم من الصمود</p>
+            <div class="progress-bar"><div id="pFill" class="progress-fill"></div></div>
+            <button class="btn" onclick="resetCounter()" style="border-color:var(--danger); color:var(--danger); margin-top:20px; font-size:12px;">لقد انتكست (إعادة العداد)</button>
+        </div>
+
+        <div class="card">
+            <h4>إسعافات سريعة 🚨</h4>
+            <button class="btn" onclick="triggerSupport('craving')">أشعر برغبة ملحة الآن</button>
+            <button class="btn" onclick="triggerSupport('boredom')">أشعر بالملل/الفراغ</button>
+        </div>
+
+        <button class="btn" style="background:none" onclick="showPage('homePage')">عودة للرئيسية</button>
     </div>
-</div>
 
 <script>
     function showPage(id) {
@@ -56,37 +55,39 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function processAddict() {
-        const type = document.getElementById('addictType').value;
-        const attempts = document.getElementById('attempts').value;
-        const report = document.getElementById('recoveryReport');
-        const content = document.getElementById('reportContent');
-        
-        report.style.display = 'block';
-        document.getElementById('step1').style.display = 'none';
+    // نظام العداد (Logic)
+    let days = localStorage.getItem('ls_days') || 0;
+    document.getElementById('daysCount').innerText = days;
+    updateProgress();
 
-        if(type === 'digital') {
-            document.getElementById('reportTitle').innerText = "خطة إعادة الهيكلة العصبية";
-            content.innerHTML = `
-                <b>التشخيص:</b> إدمان سلوكي يؤثر على مستويات الدوبامين.<br>
-                <b>الخطوة 1:</b> تطبيق "الصيام الرقمي" لمدة ٤ ساعات يومياً.<br>
-                <b>الخطوة 2:</b> استبدال التصفح بنشاط حركي (مشي/قراءة).<br>
-                <b>نصيحة:</b> عقلك يحتاج ٢١ يوماً لترميم المسارات العصبية.
-            `;
-        } else {
-            document.getElementById('reportTitle').innerText = "بروتوكول التحرر الكيميائي";
-            content.innerHTML = `
-                <b>التشخيص:</b> اعتمادية مادية على مادة خارجية.<br>
-                <b>الخطوة 1:</b> تقليل الجرعة بنسبة ٢٠٪ كل ٣ أيام.<br>
-                <b>الخطوة 2:</b> شرب كميات كبيرة من الماء لطرد السموم.<br>
-                <b>تحذير:</b> في حال ظهور أعراض انسحاب شديدة، يرجى استشارة طبيب فوراً.
-            `;
+    function resetCounter() {
+        if(confirm("لا بأس، الفشل جزء من التعافي. هل تريد البدء من جديد اليوم؟")) {
+            days = 0;
+            saveAndUI();
         }
     }
 
-    function emergencyHelp() {
-        alert("توقف! تنفس بعمق ١٠ مرات. تذكر لماذا بدأت. الرغبة الملحة تستمر فقط من ٣ لـ ٥ دقائق وستختفي. أنت أقوى!");
+    function triggerSupport(type) {
+        if(type === 'craving') {
+            alert("⚠️ تنبيه علمي: الرغبة الملحة (Cravings) تدوم كحد أقصى 15 دقيقة كيميائياً. اشرب كوب ماء كبير الآن، وتحرك من مكانك فوراً!");
+        } else {
+            alert("⚠️ الفراغ هو العدو الأول. اقترح عليك: تمرين ضغط 10 مرات، أو قراءة صفحتين من كتاب، أو مكالمة صديق.");
+        }
     }
+
+    function saveAndUI() {
+        localStorage.setItem('ls_days', days);
+        document.getElementById('daysCount').innerText = days;
+        updateProgress();
+    }
+
+    function updateProgress() {
+        let percent = (days / 90) * 100; // الهدف الأول 90 يوم
+        document.getElementById('pFill').style.width = percent + "%";
+    }
+
+    // تجربة: زيادة يوم تلقائياً (للعرض فقط)
+    // في التطبيق الحقيقي سنحسب الفرق بين تاريخين
 </script>
 
 </body>
